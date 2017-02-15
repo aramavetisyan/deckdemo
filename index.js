@@ -11,5 +11,5 @@ import {env} from './objects/index.js';
 
 const scene = SceneManager.get();
 const amLight = new THREE.AmbientLight();
-amLight.intensity = 1.2;
+amLight.intensity = 1.1;
 scene.add(amLight);
