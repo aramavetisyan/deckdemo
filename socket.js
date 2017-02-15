@@ -3,7 +3,6 @@ import {SceneManager} from 'https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManag
 import {EVENT_NAMES} from 'https://cdn.rodin.io/v0.0.1/rodinjs/constants/constants';
 import {screen} from './objects/screen.js';
 import * as Characters from './objects/characters.js';
-import {env} from './objects/index.js';
 
 
 let initialPositions = [
@@ -22,23 +21,12 @@ const activeUsers = {};
 const scene = SceneManager.get();
 const SS = new RodinSocket();
 
-
-screen.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-   SS.broadcastToAll('changeMode', {});
-});
-
 SS.connect({});
 
 SS.onConnected((data)=> SS.getConnectedUsersList());
 
 SS.onMessage('socketDisconnected', (data)=>scene.scene.remove(activeUsers[data.socketId]));
 
-SS.onMessage('changeMode', (data)=>{
-    if(env.mode === 'light') {
-       env.enterDarkMode();
-       SS.setData({darkMode:true});
-   }
-});
 
 SS.onMessage('renderPerson', (data)=>{
     if(data.socketId != SS.Socket.id)
@@ -74,13 +62,8 @@ SS.onMessage('getConnectedUsersList', (data)=>{
     let findPresentaionImageState = data.find((user)=> user.imageIndex);
     let findEnteredDarkMode = data.find((user)=> user.darkMode);
     
-    if(findEnteredDarkMode){
-        env.enterDarkMode();
-        SS.setData({darkMode:true});
-    }    
     
      if(findPresentaionImageState){
-        screen.unlock();
         screen.show(findPresentaionImageState.imageIndex);
         SS.setData({imageIndex:findPresentaionImageState.imageIndex});
     }

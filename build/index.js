@@ -3,7 +3,7 @@
 System.register(['https://cdn.rodin.io/v0.0.1/vendor/three/THREE.GLOBAL', 'https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'https://cdn.rodin.io/v0.0.1/rodinjs/sculpt/CubeObject', 'https://cdn.rodin.io/v0.0.1/rodinjs/controllers/MouseController', 'https://cdn.rodin.io/v0.0.1/rodinjs/controllers/ViveController', './socket.js', './controllers.js', './objects/index.js'], function (_export, _context) {
   "use strict";
 
-  var THREE, SceneManager, CubeObject, MouseController, ViveController, env, scene, amLight;
+  var THREE, SceneManager, CubeObject, MouseController, ViveController, scene, amLight;
   return {
     setters: [function (_httpsCdnRodinIoV001VendorThreeTHREEGLOBAL) {
       THREE = _httpsCdnRodinIoV001VendorThreeTHREEGLOBAL.THREE;
@@ -15,14 +15,12 @@ System.register(['https://cdn.rodin.io/v0.0.1/vendor/three/THREE.GLOBAL', 'https
       MouseController = _httpsCdnRodinIoV001RodinjsControllersMouseController.MouseController;
     }, function (_httpsCdnRodinIoV001RodinjsControllersViveController) {
       ViveController = _httpsCdnRodinIoV001RodinjsControllersViveController.ViveController;
-    }, function (_socketJs) {}, function (_controllersJs) {}, function (_objectsIndexJs) {
-      env = _objectsIndexJs.env;
-    }],
+    }, function (_socketJs) {}, function (_controllersJs) {}, function (_objectsIndexJs) {}],
     execute: function () {
       scene = SceneManager.get();
       amLight = new THREE.AmbientLight();
 
-      amLight.intensity = 1.2;
+      amLight.intensity = 1.1;
       scene.add(amLight);
     }
   };

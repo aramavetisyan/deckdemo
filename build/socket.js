@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'https://cdn.rodin.io/v0.0.1/rodinjs/constants/constants', './objects/screen.js', './objects/characters.js', './objects/index.js'], function (_export, _context) {
+System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'https://cdn.rodin.io/v0.0.1/rodinjs/constants/constants', './objects/screen.js', './objects/characters.js'], function (_export, _context) {
     "use strict";
 
-    var SceneManager, EVENT_NAMES, screen, Characters, env, initialPositions, activeUsers, scene, SS;
+    var SceneManager, EVENT_NAMES, screen, Characters, initialPositions, activeUsers, scene, SS;
 
 
     function renderMan(position, socketId) {
@@ -24,8 +24,6 @@ System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'http
             screen = _objectsScreenJs.screen;
         }, function (_objectsCharactersJs) {
             Characters = _objectsCharactersJs;
-        }, function (_objectsIndexJs) {
-            env = _objectsIndexJs.env;
         }],
         execute: function () {
             initialPositions = [{ x: -1, y: 0, z: -1 }, { x: 1, y: 0, z: -1 }, { x: 2, y: 0, z: -1 }, { x: 3, y: 0, z: -1 }, { x: 4, y: 0, z: -1 }, { x: -2, y: 0, z: -1 }, { x: -3, y: 0, z: -1 }];
@@ -33,10 +31,6 @@ System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'http
             scene = SceneManager.get();
             SS = new RodinSocket();
 
-
-            screen.on(EVENT_NAMES.CONTROLLER_KEY_UP, function (evt) {
-                SS.broadcastToAll('changeMode', {});
-            });
 
             SS.connect({});
 
@@ -46,13 +40,6 @@ System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'http
 
             SS.onMessage('socketDisconnected', function (data) {
                 return scene.scene.remove(activeUsers[data.socketId]);
-            });
-
-            SS.onMessage('changeMode', function (data) {
-                if (env.mode === 'light') {
-                    env.enterDarkMode();
-                    SS.setData({ darkMode: true });
-                }
             });
 
             SS.onMessage('renderPerson', function (data) {
@@ -92,13 +79,7 @@ System.register(['https://cdn.rodin.io/v0.0.1/rodinjs/scene/SceneManager', 'http
                     return user.darkMode;
                 });
 
-                if (findEnteredDarkMode) {
-                    env.enterDarkMode();
-                    SS.setData({ darkMode: true });
-                }
-
                 if (findPresentaionImageState) {
-                    screen.unlock();
                     screen.show(findPresentaionImageState.imageIndex);
                     SS.setData({ imageIndex: findPresentaionImageState.imageIndex });
                 }

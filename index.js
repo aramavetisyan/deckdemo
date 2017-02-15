@@ -6,7 +6,7 @@ import {ViveController} from 'https://cdn.rodin.io/v0.0.1/rodinjs/controllers/Vi
 import './socket.js';
 import './controllers.js';
 import './objects/index.js';
-import {env} from './objects/index.js';
+//import {env} from './objects/index.js';
 
 
 const scene = SceneManager.get();

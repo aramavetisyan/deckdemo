@@ -8,6 +8,15 @@ import {Event} from 'https://cdn.rodin.io/v0.0.1/rodinjs/Event';
 
 const scene = SceneManager.get();
 
+const hoverBTNAnimation = new Animation('hoverBTN', {
+    scale: {
+        x: 1.1,
+        y: 1.1,
+        z: 1.1
+    }
+});
+hoverBTNAnimation.duration(100);
+
 const hoverAnimation = new Animation('hover', {
     scale: {
         x: 1.01,
@@ -28,12 +37,11 @@ hoverOutAnimation.duration(100);
 
 export class Screen extends THREEObject {
     constructor() {
-        const width = 6;
+        const width = 5.05;
         const p = 1920 / 1080;
         const height = width / p;
 
         super(new THREE.Mesh(new THREE.PlaneGeometry(width, height, 1, 1), new THREE.MeshBasicMaterial({side: THREE.DoubleSide})));
-        this.locked = false;
         this.lastChanged = 0;
 
         this.animator.add(hoverAnimation, hoverOutAnimation);
@@ -49,7 +57,6 @@ export class Screen extends THREEObject {
         this.on('ready', () => {
             this.currentIndex = -1;
             this.show(0);
-            this.lock();
 
             this.backButton = new Element({
                 width: .2,
@@ -74,19 +81,19 @@ export class Screen extends THREEObject {
                 evt.target.object3D.position.set(-width / 2 + .4, height / 2 - .3, .1);
                 this.object3D.add(evt.target.object3D);
                 evt.target.raycastable = true;
-                evt.target.animator.add(hoverAnimation, hoverOutAnimation);
+                evt.target.animator.add(hoverBTNAnimation, hoverOutAnimation);
             });
 
             this.backButton.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
                 if (evt.target.animator.isPlaying('hoverout')) {
                     evt.target.animator.stop('hoverout', false);
                 }
-                evt.target.animator.start('hover');
+                evt.target.animator.start('hoverBTN');
             });
 
             this.backButton.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
-                if (evt.target.animator.isPlaying('hover')) {
-                    evt.target.animator.stop('hover', false);
+                if (evt.target.animator.isPlaying('hoverBTN')) {
+                    evt.target.animator.stop('hoverBTN', false);
                 }
                 evt.target.animator.start('hoverout');
             });
@@ -104,7 +111,7 @@ export class Screen extends THREEObject {
     show(slideIndex) {
         if(Date.now() - this.lastChanged < 200) return;
         this.lastChanged = Date.now();
-        if(this.locked || this.currentIndex === slideIndex) return;
+        if(this.currentIndex === slideIndex) return;
         this.object3D.material.map = this.slides[slideIndex];
         this.currentIndex = slideIndex;
         this.emit('change', new Event(this));
@@ -121,21 +128,13 @@ export class Screen extends THREEObject {
             this.show(this.currentIndex - 1);
         }
     }
-
-    lock() {
-        this.locked = true;
-    }
-
-    unlock() {
-        this.locked = false;
-    }
 }
 
 export const screen = new Screen();
 
 screen.on('ready', (evt) => {
-    evt.target.object3D.position.y = 1.9;
-    evt.target.object3D.position.z = -4;
+    evt.target.object3D.position.y = 1.75;
+    evt.target.object3D.position.z = -4.16;
     evt.target.raycastable = true;
     scene.add(evt.target.object3D);
 });
